@@ -4,6 +4,11 @@ Siemens S7-1200 PLC ile kontrol edilen ve ürünleri renklerine göre ayıran bi
 
 > **English summary:** A color sorting conveyor line controlled by a Siemens S7-1200 PLC (TIA Portal V21, S7-PLCSIM) and commissioned end-to-end in a Factory I/O 3D virtual plant. The project includes a state machine (Idle / Running / Paused / Fault / Manual), Auto/Manual modes, emergency stop with safe restart, a pusher position fault alarm, reusable function blocks (Ladder + SCL) and full documentation (I/O list, functional description, state diagram, FAT test list).
 
+![Factory I/O sahnesi](images/factoryio_sahne.png)
+
+## Demo
+
+https://github.com/sedatoner/Konveyor-Renk-Ayirma-PLC/raw/main/images/demo.mp4
 
 *Start → renk ayırma → Stop → acil stop → Reset → yeniden Start*
 
@@ -40,6 +45,8 @@ Emitter → ═══════[Vision 1]═════════[Vision 2]
 
 ## Durum makinesi
 
+![Durum diyagramı](images/Durum_Diyagrami.png)
+
 | Durum | Bant / Emitter | Lamba |
 |---|---|---|
 | 0 BEKLEME | Durur | Sarı |
@@ -63,9 +70,11 @@ Basit kilitlemeler Ladder (LAD), mantık ağırlıklı kısımlar SCL ile yazıl
 
 **İsimlendirme standardı:** `I_` giriş, `Q_` çıkış, `FB_` fonksiyon bloğu, `IDB_` instance veri bloğu.
 
+![OB1](images/tia_ob1.png)
+
 ## I/O özeti
 
-14 dijital giriş, 8 dijital çıkış. Tam liste için: 
+14 dijital giriş, 8 dijital çıkış. Tam liste için: [docs/IO_Listesi.xlsx](docs/IO_Listesi.xlsx)
 
 | Grup | Adresler | Sinyaller |
 |---|---|---|
@@ -75,20 +84,44 @@ Basit kilitlemeler Ladder (LAD), mantık ağırlıklı kısımlar SCL ile yazıl
 
 ## Test
 
-Devreye alma, sahadaki sırayla yapılmıştır: önce haberleşme ve I/O testi (loop check), sonra kod. Sistem **22 testlik FAT listesiyle** doğrulanmış ve testlerin tamamı geçmiştir: I/O, otomatik çalışma, acil stop, manuel mod ve alarm. 
+Devreye alma, sahadaki sırayla yapılmıştır: önce haberleşme ve I/O testi (loop check), sonra kod. Sistem **22 testlik FAT listesiyle** doğrulanmış ve testlerin tamamı geçmiştir: I/O, otomatik çalışma, acil stop, manuel mod ve alarm. Ayrıntılar için: [docs/FAT_Test_Listesi.xlsx](docs/FAT_Test_Listesi.xlsx)
 
 ## Dokümanlar
 
 | Doküman | Dosya |
 |---|---|
-| Fonksiyonel tanım | 
-| I/O listesi |
-| FAT test listesi |
-| Proje raporu | 
-| Durum diyagramı | 
+| Fonksiyonel tanım | [docs/Fonksiyonel_Tanim.pdf](docs/Fonksiyonel_Tanim.pdf) |
+| I/O listesi | [docs/IO_Listesi.xlsx](docs/IO_Listesi.xlsx) |
+| FAT test listesi | [docs/FAT_Test_Listesi.xlsx](docs/FAT_Test_Listesi.xlsx) |
+| Proje raporu | [docs/Proje_Raporu.pdf](docs/Proje_Raporu.pdf) |
+| Durum diyagramı | [images/Durum_Diyagrami.png](images/Durum_Diyagrami.png) |
 
- Proje, Factory I/O'nun S7-1200 için hazırladığı TIA Portal şablonundan oluşturulmuştur. OB1'in 1. network'ündeki haberleşme bloğu, Factory I/O ile PLCSIM arasındaki bağlantı için gereklidir.
+## Nasıl çalıştırılır?
+
+**Gereksinimler:** TIA Portal V21, S7-PLCSIM V21, Factory I/O (S7-PLCSIM sürücüsünü içeren bir sürüm)
+
+1. `plc/Konveyor_Renk_Ayirma.zap21` dosyasını TIA Portal'da **Project → Retrieve** ile aç.
+2. `PLC_1`'i seç, **Start simulation** ile PLCSIM'i başlat ve programı yükle. CPU'yu RUN moduna al.
+3. `factoryio/` klasöründeki sahneyi Factory I/O'da aç.
+4. Factory I/O'da **File → Drivers → Siemens S7-PLCSIM** seç, **Connect**'e bas ve ardından **Play**'e bas.
+5. Seçici anahtarı **0 (Oto)** konumuna getir ve **Start**'a bas.
+
+> Not: Proje, Factory I/O'nun S7-1200 için hazırladığı TIA Portal şablonundan oluşturulmuştur. OB1'in 1. network'ündeki haberleşme bloğu, Factory I/O ile PLCSIM arasındaki bağlantı için gereklidir.
 
 ## Güvenlik notu
 
 Bu simülasyonda acil stop PLC yazılımıyla değerlendirilmektedir. **Gerçek bir sistemde acil stop yazılımla değil, donanımsal güvenlik devresiyle (güvenlik rölesi veya F-CPU) sağlanır.** Güvenlik fonksiyonlarının kapsamı risk değerlendirmesiyle belirlenir (EN ISO 12100, EN ISO 13849-1).
+
+## Repo yapısı
+
+```
+├── README.md
+├── plc/          TIA Portal proje arşivi, SCL kaynakları, tag import dosyası
+├── factoryio/    Factory I/O sahnesi
+├── docs/         Fonksiyonel tanım, I/O listesi, FAT listesi, proje raporu
+└── images/       Durum diyagramı, ekran görüntüleri, demo videosu
+```
+
+## Sonraki adım
+
+Bu hatta WinCC ile bir HMI/SCADA ekranı eklenmesi planlanmaktadır: durum göstergeleri, alarm listesi ve manuel kontrol.
